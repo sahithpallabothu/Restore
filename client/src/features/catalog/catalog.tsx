@@ -1,22 +1,19 @@
-import { Fragment } from "react";
+import { useState, useEffect } from "react";
 import { Product } from "../../app/models/product";
+import ProductList from "./productList";
 
-interface Props {
-  products: Product[];
-  addProduct: () => void;
-}
+const Catalog = () => {
+  const [products, setProducts] = useState<Product[]>([]);
 
-const Catalog = ({ products, addProduct }: Props) => {
+  useEffect(() => {
+    fetch("http://localhost:5059/api/Products")
+      .then((res) => res.json())
+      .then((data) => setProducts(data));
+  }, []);
+
   return (
     <>
-      <ul>
-        {products.map((product) => (
-          <li key={product.id}>
-            {"Name :" + product.name + "Price :" + product.price}
-          </li>
-        ))}
-      </ul>
-      <button onClick={addProduct}>Add Product</button>
+      <ProductList products={products} />
     </>
   );
 };
